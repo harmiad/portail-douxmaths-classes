@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automatismes -- Chapitre 1 (11thES -- Suites arithmétiques) -- Séance 1</title>
+<style>
+  :root {{
+    --navy: #0f284d;
+    --red: #7a1820;
+    --orange: #F15929;
+    --bg: #f4f6f9;
+  }}
+  * {{ box-sizing: border-box; }}
+  body {{
+    margin: 0;
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, var(--navy) 0%, #1b3a66 60%, var(--red) 130%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+  }}
+  .card {{
+    background: white;
+    width: min(900px, 94vw);
+    min-height: 480px;
+    border-radius: 18px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    padding: 2.2em 2.6em;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }}
+  .topbar {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 0.6em;
+  }}
+  .chrono-total {{
+    font-variant-numeric: tabular-nums;
+    background: var(--navy);
+    color: white;
+    padding: 0.25em 0.7em;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }}
+  h1 {{
+    color: var(--navy);
+    text-align: center;
+    margin-top: 0.2em;
+  }}
+  .subtitle {{ text-align: center; color: #555; margin-bottom: 1.4em; }}
+  .start-btn, .nav-btn {{
+    display: block;
+    margin: 1.6em auto 0.5em auto;
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 0.85em 2.2em;
+    border-radius: 10px;
+    font-size: 1.15em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.2s;
+  }}
+  .start-btn:hover, .nav-btn:hover {{ background: #5c1218; transform: translateY(-1px); }}
+  .meta {{
+    text-align: center;
+    color: #888;
+    font-size: 0.95em;
+    margin-top: 2.5em;
+  }}
+  .progress-wrap {{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.2em;
+  }}
+  .exo-label {{
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: 0.95em;
+  }}
+  .qcount {{ color: #888; font-size: 0.95em; }}
+  .progressbar-outer {{
+    background: #e6e9ee;
+    border-radius: 999px;
+    height: 8px;
+    margin: 0.6em 0 1.6em 0;
+    overflow: hidden;
+  }}
+  .progressbar-inner {{
+    height: 100%;
+    background: var(--red);
+    width: 0%;
+    transition: width 0.3s ease;
+  }}
+  .question-box {{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.6em;
+    line-height: 1.5;
+    color: #16233d;
+    padding: 0.5em 0.3em;
+    min-height: 160px;
+  }}
+  .timer-wrap {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.6em 0 1em 0;
+  }}
+  .timer-ring {{
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7em;
+    font-weight: 700;
+    color: white;
+    background: conic-gradient(var(--orange) var(--pct, 100%), #dfe3ea 0);
+    transition: background 0.2s linear;
+    position: relative;
+  }}
+  .timer-ring::after {{
+    content: "";
+    position: absolute;
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    background: var(--navy);
+  }}
+  .timer-num {{ position: relative; z-index: 2; }}
+  .timer-label {{ color: #888; font-size: 0.85em; margin-top: 0.3em; }}
+  .controls {{
+    display: flex;
+    justify-content: center;
+    gap: 0.8em;
+    margin-top: 0.6em;
+    flex-wrap: wrap;
+  }}
+  .ctrl-btn {{
+    background: var(--navy);
+    color: white;
+    border: none;
+    padding: 0.55em 1.3em;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+  }}
+  .ctrl-btn.secondary {{ background: #6c7a90; }}
+  .ctrl-btn:hover {{ opacity: 0.9; }}
+  .corr-title {{ color: var(--red); text-align: center; margin-bottom: 0.2em; }}
+  .corr-sub {{ text-align: center; color: #666; margin-bottom: 1.2em; }}
+  .corr-scroll {{ max-height: 60vh; overflow-y: auto; padding-right: 0.4em; }}
+  .corr-exo {{
+    color: var(--navy);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    margin: 1.1em 0 0.4em 0;
+    border-bottom: 2px solid #e6e9ee;
+    padding-bottom: 0.2em;
+  }}
+  .corr-item {{ margin-bottom: 0.9em; font-size: 1.02em; }}
+  .corr-q {{ color: #333; }}
+  .corr-a {{ color: var(--orange); font-weight: 700; }}
+  .corr-expl {{ color: var(--orange); font-size: 0.92em; margin-top: 0.15em; }}
+  .hidden {{ display: none !important; }}
+  footer.foot {{ text-align: center; color: #999; font-size: 0.78em; margin-top: 1em; }}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div id="screen-start">
+    <div class="topbar"><span></span><span></span></div>
+    <h1>Automatismes -- Chapitre 1 : Suites arithmétiques</h1>
+    <p class="subtitle">Séance 1 -- 16 questions -- raison et premier terme, reconnaître une suite arithmétique, terme de rang n, sens de variation</p>
+    <p style="text-align:center;color:#555;">Chronomètre par question + chronomètre total. Corrections affichées à la fin.</p>
+    <button class="start-btn" onclick="startQuiz()">Commencer</button>
+    <p class="meta">Automatismes du chapitre 1 (11thES, tronc commun) -- variations des exercices de Fiche1_Exercices_Ch1_Suites_Arithmetiques.tex, cf. le classeur 11thES_Progression_Automatismes_2026-2027.xlsx.</p>
+  </div>
+
+  <div id="screen-quiz" class="hidden" style="display:flex;flex-direction:column;flex:1;">
+    <div class="topbar">
+      <span id="chrono-total" class="chrono-total">00:00</span>
+      <span class="qcount" id="qcount">Question 1 / 16</span>
+    </div>
+    <div class="progress-wrap">
+      <span class="exo-label" id="exo-label">Exercice 1</span>
+    </div>
+    <div class="progressbar-outer"><div class="progressbar-inner" id="progressbar"></div></div>
+
+    <div class="question-box" id="question-text">...</div>
+
+    <div class="timer-wrap">
+      <div class="timer-ring" id="timer-ring" style="--pct:100%;">
+        <span class="timer-num" id="timer-num">15</span>
+      </div>
+      <div class="timer-label">secondes restantes</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn secondary" onclick="pauseResume()" id="pause-btn">Pause</button>
+      <button class="ctrl-btn" onclick="nextQuestion()">Suivant</button>
+      <button class="ctrl-btn secondary" onclick="skipToCorrections()">Voir les corrections</button>
+    </div>
+  </div>
+
+  <div id="screen-end" class="hidden" style="flex:1;display:flex;flex-direction:column;">
+    <h2 class="corr-title">Corrections</h2>
+    <p class="corr-sub">Temps total : <strong id="final-time">--</strong></p>
+    <div class="corr-scroll" id="corr-scroll"></div>
+    <button class="start-btn" onclick="restartQuiz()">Recommencer</button>
+  </div>
+
+  <footer class="foot">Mme Doux -- 11thES -- Chapitre 1 : Suites arithmétiques -- Séance 1</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    "exo": "Exercice 1 -- Calcul mental (raison et premier terme)",
+    "time": 45,
+    "q": "(a_n) arithmétique, a0=5, raison r=4. Donner a1.",
+    "a": "9",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 1 -- Calcul mental (raison et premier terme)",
+    "time": 45,
+    "q": "(a_n) arithmétique, a0=5, raison r=4. Donner a2.",
+    "a": "13",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 1 -- Calcul mental (raison et premier terme)",
+    "time": 45,
+    "q": "(b_n) arithmétique, b0=40, raison r=-6. Donner b1.",
+    "a": "34",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 1 -- Calcul mental (raison et premier terme)",
+    "time": 45,
+    "q": "u_n = 5n - 2. Donner u0.",
+    "a": "-2",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 2 -- Reconnaître une suite arithmétique",
+    "time": 45,
+    "q": "4 ; 9 ; 14 ; 19 peuvent-ils être quatre termes consécutifs d'une suite arithmétique ?",
+    "a": "Oui",
+    "expl": "Différences toutes égales à 5."
+  },
+  {
+    "exo": "Exercice 2 -- Reconnaître une suite arithmétique",
+    "time": 45,
+    "q": "2 ; 5 ; 9 ; 14 peuvent-ils être quatre termes consécutifs d'une suite arithmétique ?",
+    "a": "Non",
+    "expl": "Différences 3, 4, 5 : pas constantes."
+  },
+  {
+    "exo": "Exercice 2 -- Reconnaître une suite arithmétique",
+    "time": 45,
+    "q": "-3 ; 1 ; 5 ; 9 peuvent-ils être quatre termes consécutifs d'une suite arithmétique ?",
+    "a": "Oui",
+    "expl": "Différences toutes égales à 4."
+  },
+  {
+    "exo": "Exercice 2 -- Reconnaître une suite arithmétique",
+    "time": 45,
+    "q": "1 ; 2 ; 4 ; 8 peuvent-ils être quatre termes consécutifs d'une suite arithmétique ?",
+    "a": "Non",
+    "expl": "Différences 1, 2, 4 : pas constantes."
+  },
+  {
+    "exo": "Exercice 3 -- Raison et terme de rang n",
+    "time": 50,
+    "q": "(u_n) arithmétique, u0=3, u1=10. Calculer r.",
+    "a": "7",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 3 -- Raison et terme de rang n",
+    "time": 50,
+    "q": "Avec u0=3 et r=7, exprimer u_n en fonction de n.",
+    "a": "u_n = 3 + 7n",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 3 -- Raison et terme de rang n",
+    "time": 50,
+    "q": "Calculer u_10.",
+    "a": "73",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 3 -- Raison et terme de rang n",
+    "time": 55,
+    "q": "(v_n) arithmétique, v0=50, v4=30. Calculer r.",
+    "a": "-5",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 4 -- Sens de variation",
+    "time": 45,
+    "q": "Suite arithmétique de raison r=6. Sens de variation ?",
+    "a": "Croissante",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 4 -- Sens de variation",
+    "time": 45,
+    "q": "Suite arithmétique de raison r=-2. Sens de variation ?",
+    "a": "Décroissante",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 4 -- Sens de variation",
+    "time": 45,
+    "q": "Suite arithmétique de raison r=0. Sens de variation ?",
+    "a": "Constante",
+    "expl": ""
+  },
+  {
+    "exo": "Exercice 4 -- Sens de variation",
+    "time": 45,
+    "q": "Suite arithmétique de raison r=2/7. Sens de variation ?",
+    "a": "Croissante",
+    "expl": ""
+  }
+];
+
+let current = 0;
+let timeLeft = 0;
+let timerInterval = null;
+let paused = false;
+let totalSeconds = 0;
+let totalInterval = null;
+
+function pad(n) {{ return n.toString().padStart(2, "0"); }}
+
+function startQuiz() {{
+  document.getElementById("screen-start").classList.add("hidden");
+  document.getElementById("screen-quiz").classList.remove("hidden");
+  current = 0;
+  totalSeconds = 0;
+  startTotalChrono();
+  showQuestion(0);
+}}
+
+function startTotalChrono() {{
+  clearInterval(totalInterval);
+  totalInterval = setInterval(() => {{
+    if (!paused) {{
+      totalSeconds++;
+      document.getElementById("chrono-total").textContent =
+        pad(Math.floor(totalSeconds / 60)) + ":" + pad(totalSeconds % 60);
+    }}
+  }}, 1000);
+}}
+
+function showQuestion(i) {{
+  if (i >= questions.length) {{ showCorrections(); return; }}
+  current = i;
+  const item = questions[i];
+  document.getElementById("exo-label").textContent = item.exo;
+  document.getElementById("qcount").textContent = "Question " + (i+1) + " / " + questions.length;
+  document.getElementById("question-text").textContent = item.q;
+  document.getElementById("progressbar").style.width = Math.round(((i) / questions.length) * 100) + "%";
+  timeLeft = item.time;
+  updateTimerDisplay(item.time);
+  clearInterval(timerInterval);
+  paused = false;
+  document.getElementById("pause-btn").textContent = "Pause";
+  timerInterval = setInterval(tick, 1000);
+}}
+
+function updateTimerDisplay(maxTime) {{
+  document.getElementById("timer-num").textContent = timeLeft;
+  const pct = Math.max(0, (timeLeft / questions[current].time) * 100);
+  document.getElementById("timer-ring").style.setProperty("--pct", pct + "%");
+}}
+
+function tick() {{
+  if (paused) return;
+  timeLeft--;
+  if (timeLeft < 0) {{ nextQuestion(); return; }}
+  updateTimerDisplay();
+}}
+
+function nextQuestion() {{
+  clearInterval(timerInterval);
+  showQuestion(current + 1);
+}}
+
+function pauseResume() {{
+  paused = !paused;
+  document.getElementById("pause-btn").textContent = paused ? "Reprendre" : "Pause";
+}}
+
+function skipToCorrections() {{
+  clearInterval(timerInterval);
+  showCorrections();
+}}
+
+function showCorrections() {{
+  clearInterval(timerInterval);
+  clearInterval(totalInterval);
+  document.getElementById("screen-quiz").classList.add("hidden");
+  document.getElementById("screen-end").classList.remove("hidden");
+  document.getElementById("final-time").textContent =
+    pad(Math.floor(totalSeconds / 60)) + ":" + pad(totalSeconds % 60);
+
+  const wrap = document.getElementById("corr-scroll");
+  wrap.innerHTML = "";
+  let lastExo = "";
+  questions.forEach((item, idx) => {{
+    if (item.exo !== lastExo) {{
+      const h = document.createElement("div");
+      h.className = "corr-exo";
+      h.textContent = item.exo;
+      wrap.appendChild(h);
+      lastExo = item.exo;
+    }}
+    const div = document.createElement("div");
+    div.className = "corr-item";
+    div.innerHTML =
+      "<span class='corr-q'>" + (idx+1) + ". " + item.q + "</span><br>" +
+      "<span class='corr-a'>Réponse : " + item.a + "</span>" +
+      (item.expl ? "<div class='corr-expl'>" + item.expl + "</div>" : "");
+    wrap.appendChild(div);
+  }});
+}}
+
+function restartQuiz() {{
+  document.getElementById("screen-end").classList.add("hidden");
+  document.getElementById("screen-start").classList.remove("hidden");
+}}
+</script>
+
+</body>
+</html>
